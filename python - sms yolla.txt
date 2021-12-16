@@ -1,0 +1,35 @@
+import requests
+
+postUrl='ilgili sms şirketinden alınan url'
+musteriNo='firmadan alınan müşteri numarası'
+kullaniciAdi='firmaya kayıtlı kullanıcı adınız'
+sifre='şifreniz'
+orjinator="orjinatör numaranız"
+
+tur='Turkce'
+zaman='2014-04-07 10:00:00'
+
+mesaj='mesajınız içeriği'
+numara1='sms yollamak istediğiniz numara'
+numara2='sms yollamak istediğiniz numara'
+
+# numaraları çoğaltabilirsiniz...
+
+string = """
+<sms>
+    <kno>"""+musteriNo+"""</kno>
+    <kulad>"""+kullaniciAdi+"""</kulad>
+    <sifre>"""+sifre+"""</sifre>
+    <gonderen>"""+orjinator+"""</gonderen>
+    <mesaj>"""+mesaj+"""</mesaj>
+    <numaralar>"""+numara1+""","""+numara2+"""</numaralar>
+    <tur>"""+tur+"""</tur>
+</sms>
+"""
+
+""" Xml içinde aşağıdaki alanlarıda gönderebilirsiniz.
+<zaman>2014-04-07 10:00:00</zaman> İleri tarih için kullanabilirsiniz """
+
+response =  requests.post(postUrl, data={"data":string})
+
+print(response.text)
