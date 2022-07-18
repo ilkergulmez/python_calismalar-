@@ -1,0 +1,13 @@
+import json
+
+import requests
+
+api = 'api şifreniz ?'
+
+url = "https://api.openweathermap.org/data/2.5/weather?appid=1bd1f7e03017a65a7e8c19ea3fac3d47&q=Ankara"
+
+person = requests.get(url)
+result = person.json()
+sehir = result['name']
+sicak = int(result['main']['temp']-273.15)
+print("Bugün hava Sıcaklığı "+ sehir,"'da" , sicak, "derecedir")
