@@ -1,0 +1,56 @@
+import smtplib
+from email.mime.text import MIMEText
+#Mail göndereceğim adresi yada adresleri bir liste içine alıyorum.
+#Eğer ki tek adrese mail gönderecekseniz string olarak değişkende tutmanız yeterlidir.
+# Bunun yanında mail başlığını ve içeriğini de bir değişkende tutuyorum.
+
+to = ['gönderilecekmail@gmail.com', 'gönderilecekmail2@gmail.com']
+subject = 'mail denemesi 3 adet'
+body = 'Bu mesajı python ile gönderdim.'
+#Daha sonra gmail hesabının kullanıcı adı ve şifresini bir değişkene atıyorum.
+
+account = 'gönderenmaili@gmail.com'
+password = 'gönderenmailsifresi'
+# gönderen maili ayar paneline girip güvenlik seviyesi kapatılmalıdır. yoksa google tarafında problem oluşabiliyor.
+# Gmail smtp serverine bağlanmak için kullanacağımız host smtp.gmail.com bu host’un port’u ise 587
+# bu bilgileri SMTP sunucusuna bağlanırken kullanacağız.
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+#Ehlo metodu ile herhangi bir bağlantı problemi olup olmadığı kontrol ediliyor.
+
+server.ehlo()
+#Starttls ile TLS  bağlantısı kurulacak tüm bağlantı işlemi şifreli olacak böylelikle bilgiler korunmuş olacak.
+
+server.starttls()
+#Gmail SMTP server’ına giriş yapıyoruz.
+
+server.login(account, password)
+
+#  Mimetext ile HTML tipli, UTF-8 bir mail içeriği oluşturdum. Böylelikle Türkçe karakterlerde herhangi bir sorun yaşanmayacaktır.
+# mail[‘From’] ile maili gönderen kullanıcının mail adresini yazıyoruz.
+# mail[‘Subject’] ile mailin başlığını belirliyoruz.
+# mail[‘To’] ile mailin kimlere gittiğini belirliyoruz. Burada join metotu ile listede yer alan mailler birleştirildi, eğer ki sadece bir mail adresi kullanılacaksa bu işleme gerek olmayacaktır.
+# Mime’nin ne olduğunu detaylı olarak incelemek için: http://en.wikipedia.org/wiki/MIME
+
+mail = MIMEText(body, 'html', 'utf-8')
+mail['From'] = account
+mail['Subject'] = subject
+mail['To'] = ','.join(to)
+#Mail içeriğimizi uygun string formatına çevirmek için as_string metodu kullanılır.
+
+mail = mail.as_string()
+
+
+#En son olarak mail gönderimi sağlanır.
+
+try:
+ for i in range(3):
+    server.sendmail(account, to, mail)
+    print('Mail gönderimi başarılı')
+
+except:
+    print('Mail gönderimi başarısız')
+# Mail gönderimi başarıyla sağlanmış olması gerekmektedir.
+# Mail gönderiminde utf-8 karakter sorunu yaşanmaması için Mimetext modülüne ihtiyaç duyuyoruz.
+# Sisteminize bu mail modülünü kurmadan göndereceğiniz mailler de utf-8 karakter problemi yaşayabilirsiniz.
+server.quit()
